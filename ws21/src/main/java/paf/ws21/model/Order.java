@@ -60,6 +60,12 @@ public class Order {
     //Create Json Object from order object
     public JsonObject toJson() {
         return Json.createObjectBuilder()
+                .add("customer_id", getCustomer().getcId())
+                .add("company", getCustomer().getCompany())
+                .add("last_name", getCustomer().getLastName())
+                .add("first_name", getCustomer().getFirstName())
+                .add("job_title", getCustomer().getJobTitle())
+                .add("business_phone", getCustomer().getBusinessPhone())
                 .add("order_id", getoId())
                 .add("order_date", getOrderDate().toString())
                 .add("shipped_date", getShippedDate() != null ? getShippedDate().toString() : "")

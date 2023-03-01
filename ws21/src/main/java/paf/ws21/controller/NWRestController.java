@@ -71,16 +71,19 @@ public class NWRestController {
     @GetMapping(path = "/customer/{customerId}/orders")
     public ResponseEntity<String> getOrderById(@PathVariable Integer customerId){
 
-        List<Order> oList = nwRepo.getOrderByCId(customerId);
-        
-        if(oList.isEmpty()){
+        try {
+            nwRepo.getCustomerById(customerId);
+        }
+        catch (IndexOutOfBoundsException e) {
             return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(Json.createObjectBuilder()
-                        .add("message","customerId: %s, does not have any orders".formatted(customerId))
-                        .build().toString());      
+                        .add("message","customerId: %s not found".formatted(customerId))
+                        .build().toString()); 
         }
+
+        List<Order> oList = nwRepo.getOrderByCId(customerId);
 
         JsonArrayBuilder arrBuilder = Json.createArrayBuilder();
         for (Order o : oList) {
@@ -90,7 +93,7 @@ public class NWRestController {
                 .status(HttpStatus.OK)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(Json.createObjectBuilder()
-                        .add("customers",arrBuilder)
+                        .add("orders",arrBuilder)
                         .build().toString());
 
     }
